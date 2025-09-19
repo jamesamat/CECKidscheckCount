@@ -3,22 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <title>Chuck E. Cheese Guest Counter</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=768, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: linear-gradient(135deg, #a78bfa, #10b981);
+    }
     body {
       font-family: Arial, Helvetica, sans-serif;
-      background: linear-gradient(135deg, #a78bfa, #10b981);
-      margin: 0;
-      min-height: 100vh;
+      height: 100vh;
+      width: 100vw;
+      box-sizing: border-box;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     .container {
-      max-width: 400px;
-      margin: 0 auto;
+      width: 700px;
+      height: 900px;
       background: #fff;
-      border-radius: 24px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.14);
-      padding: 24px;
-      margin-top: 32px;
+      border-radius: 32px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.11);
+      padding: 32px 24px 20px 24px;
+      /* No overflow, fixed height */
+      display: flex;
+      flex-direction: column;
+      justify-content: start;
+      align-items: center;
+      box-sizing: border-box;
     }
     .header {
       text-align: center;
@@ -26,33 +41,36 @@
     }
     .header h1 {
       color: #7c3aed;
-      font-size: 2em;
-      margin-bottom: 6px;
+      font-size: 2.2em;
+      margin-bottom: 4px;
     }
     .header h2 {
       color: #333;
-      font-size: 1.1em;
-      margin-bottom: 6px;
+      font-size: 1.08em;
+      margin-bottom: 4px;
     }
     .categories {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 12px;
       justify-content: center;
       margin-bottom: 18px;
+      width: 100%;
     }
     .categories button {
-      flex: 1 1 45%;
+      flex: 1 1 28%;
       min-width: 110px;
-      padding: 10px 2px;
-      border-radius: 12px;
+      max-width: 140px;
+      padding: 13px 2px;
+      border-radius: 16px;
       border: 2px solid #eee;
       background: #a78bfa;
       color: #fff;
-      font-size: 1em;
+      font-size: 1.2em;
       font-weight: bold;
       cursor: pointer;
       transition: border 0.2s;
+      height: 64px;
     }
     .categories button.selected {
       border: 2px solid #10b981;
@@ -60,89 +78,115 @@
     }
     .display {
       text-align: center;
-      margin-bottom: 16px;
+      margin-bottom: 10px;
       background: #7c3aed;
-      border-radius: 12px;
-      padding: 16px 0;
+      border-radius: 16px;
+      padding: 18px 0 10px 0;
       color: #fff;
+      width: 100%;
+    }
+    .display #categoryDisplay {
+      font-size: 1.08em;
+      margin-bottom: 2px;
+    }
+    .display #display {
+      font-size: 2.9em;
+      margin-bottom: 2px;
+    }
+    .display .max {
+      font-size: 1em;
+      color: #ede9fe;
     }
     .keypad {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 14px;
       justify-content: center;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
+      width: 100%;
     }
     .keypad button {
-      flex: 1 1 28%;
+      flex: 1 1 17%;
       min-width: 54px;
-      padding: 12px 0;
-      border-radius: 10px;
+      max-width: 90px;
+      padding: 19px 0;
+      border-radius: 12px;
       border: none;
       background: #10b981;
       color: #fff;
-      font-size: 1.1em;
+      font-size: 1.25em;
       font-weight: bold;
       cursor: pointer;
       margin-bottom: 2px;
+      height: 60px;
     }
     .controls {
       display: flex;
-      gap: 10px;
-      margin-bottom: 10px;
+      gap: 16px;
+      margin-bottom: 7px;
       justify-content: center;
+      width: 100%;
     }
     .controls button {
-      flex: 1 1 45%;
-      padding: 10px 0;
-      border-radius: 10px;
+      flex: 1 1 48%;
+      padding: 13px 0;
+      border-radius: 12px;
       border: none;
       color: #fff;
       font-weight: bold;
-      font-size: 1em;
+      font-size: 1.08em;
       cursor: pointer;
+      height: 54px;
     }
     .reset { background: #7c3aed; }
     .checkin { background: #10b981; }
-    .clearall { background: #ef4444; }
     #statusMessage {
       text-align: center;
       min-height: 24px;
       color: #eab308;
-      font-size: 1em;
-      margin-bottom: 10px;
+      font-size: 1.05em;
+      margin-bottom: 8px;
+      height: 24px;
     }
     .summary {
       background: #ede9fe;
       border-radius: 12px;
-      padding: 10px 16px;
-      margin-top: 8px;
+      padding: 8px 14px;
+      margin-top: 4px;
+      width: 100%;
+      box-sizing: border-box;
     }
     .summary h3 {
       text-align: center;
       color: #7c3aed;
-      margin-bottom: 6px;
-      font-size: 1.08em;
+      margin-bottom: 4px;
+      font-size: 1.06em;
     }
     .summary-table {
       width: 100%;
-      font-size: 0.95em;
+      font-size: 1em;
       color: #7c3aed;
     }
     .summary-table td {
-      padding: 4px 0;
+      padding: 3px 0;
+      font-size: 1em;
     }
     .summary-table td.value {
       color: #10b981;
       font-weight: bold;
       text-align: right;
     }
+    /* Prevent all scrolling */
+    * {
+      overscroll-behavior: contain;
+      box-sizing: border-box;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <div style="font-size:2.6em;">🎪</div>
+      <div style="font-size:2.8em;">🎪</div>
       <h1>Chuck E. Cheese</h1>
       <h2>Guest Counter</h2>
     </div>
@@ -155,8 +199,8 @@
     </div>
     <div class="display">
       <div id="categoryDisplay">Select category</div>
-      <div style="font-size:2em;" id="display">0</div>
-      <div style="font-size:0.9em;">Max 999 guests</div>
+      <div id="display">0</div>
+      <div class="max">Max 999 guests</div>
     </div>
     <div class="keypad">
       <button onclick="addGuests(1)">1</button>
@@ -173,7 +217,6 @@
     <div class="controls">
       <button class="reset" onclick="clearCounter()">RESET</button>
       <button class="checkin" onclick="submitGuests()" id="checkin-btn">CHECK IN</button>
-      <button class="clearall" onclick="clearAllTotals()">CLEAR ALL</button>
     </div>
     <div id="statusMessage"></div>
     <div class="summary">
@@ -271,14 +314,6 @@
       btn.style.opacity = btn.disabled ? 0.6 : 1;
       btn.style.cursor = btn.disabled ? 'not-allowed' : 'pointer';
     }
-    function clearAllTotals() {
-      if (confirm("Reset all today's counts?")) {
-        for (let cat in categoryTotals) categoryTotals[cat] = 0;
-        updateSummary();
-        saveTotals();
-        showStatus('All totals cleared.', 'success');
-      }
-    }
     function saveTotals() {
       try {
         localStorage.setItem('categoryTotals', JSON.stringify(categoryTotals));
@@ -302,5 +337,4 @@
     }
   </script>
 </body>
-</html>
 </html>
