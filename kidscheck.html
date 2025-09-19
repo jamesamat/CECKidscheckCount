@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chuck E. Cheese Guest Counter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="kidscheck.css">
+</head>
+<body class="bg-gradient-to-br from-purple-500 to-green-500 min-h-screen body-font">
+    <main class="container mx-auto px-4 py-8 flex items-center justify-center min-h-screen">
+        <section class="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full border-8 border-purple-400" aria-label="Guest Counter Main">
+            <!-- Header -->
+            <header class="text-center mb-8">
+                <div class="text-6xl mb-4">🎪</div>
+                <h1 class="chuck-font text-3xl text-purple-600 mb-2">Chuck E. Cheese</h1>
+                <h2 class="text-xl font-bold text-gray-700">Guest Counter</h2>
+            </header>
+            
+            <!-- Age Category Selection -->
+            <section class="mb-6" aria-label="Age Category Selection">
+                <div class="text-center text-lg font-bold text-gray-700 mb-4">Select Age Category:</div>
+                <div class="grid grid-cols-2 gap-3 mb-3">
+                    <button aria-label="Select Toddler category" onclick="selectCategory('toddler')" id="toddler-btn" class="category-btn bg-purple-400 hover:bg-purple-500 text-white font-bold py-3 px-4 rounded-xl border-4 border-transparent">
+                        👶 Toddler<br><span class="text-sm">(1-3 years)</span>
+                    </button>
+                    <button aria-label="Select Preschool category" onclick="selectCategory('preschool')" id="preschool-btn" class="category-btn bg-green-400 hover:bg-green-500 text-white font-bold py-3 px-4 rounded-xl border-4 border-transparent">
+                        🧒 Preschool<br><span class="text-sm">(4-5 years)</span>
+                    </button>
+                </div>
+                <div class="grid grid-cols-2 gap-3 mb-3">
+                    <button aria-label="Select School Age category" onclick="selectCategory('school')" id="school-btn" class="category-btn bg-purple-500 hover:bg-purple-600 text-white font-bold py-3 px-4 rounded-xl border-4 border-transparent">
+                        🎒 School Age<br><span class="text-sm">(6-12 years)</span>
+                    </button>
+                    <button aria-label="Select Teen category" onclick="selectCategory('teen')" id="teen-btn" class="category-btn bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-xl border-4 border-transparent">
+                        🧑‍🎓 Teen<br><span class="text-sm">(13-17 years)</span>
+                    </button>
+                </div>
+                <div class="grid grid-cols-1 gap-3">
+                    <button aria-label="Select Adult category" onclick="selectCategory('adult')" id="adult-btn" class="category-btn bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-xl border-4 border-transparent">
+                        👨‍👩‍👧‍👦 Adult<br><span class="text-sm">(18+ years)</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Display Screen -->
+            <section class="display-screen rounded-2xl p-6 mb-6 text-center" aria-live="polite">
+                <div class="text-sm text-green-300 mb-1">Selected Category:</div>
+                <div id="categoryDisplay" class="text-lg font-bold text-green-300 mb-3">Please select category</div>
+                <div class="text-sm text-green-300 mb-2">Number of Guests:</div>
+                <div id="display" class="text-5xl font-bold text-white font-mono h-16 flex items-center justify-center">
+                    0
+                </div>
+                <div class="text-xs text-purple-300 mt-2">Max 999 guests</div>
+            </section>
+            
+            <!-- Counter Keypad 1-10 -->
+            <section aria-label="Guest Add Keypad">
+                <div class="grid grid-cols-5 gap-3 mb-4">
+                    <button aria-label="Add 1 guest" onclick="addGuests(1)" class="keypad-button bg-green-400 hover:bg-green-500 text-xl font-bold text-white py-3 rounded-xl">1</button>
+                    <button aria-label="Add 2 guests" onclick="addGuests(2)" class="keypad-button bg-green-400 hover:bg-green-500 text-xl font-bold text-white py-3 rounded-xl">2</button>
+                    <button aria-label="Add 3 guests" onclick="addGuests(3)" class="keypad-button bg-green-400 hover:bg-green-500 text-xl font-bold text-white py-3 rounded-xl">3</button>
+                    <button aria-label="Add 4 guests" onclick="addGuests(4)" class="keypad-button bg-green-400 hover:bg-green-500 text-xl font-bold text-white py-3 rounded-xl">4</button>
+                    <button aria-label="Add 5 guests" onclick="addGuests(5)" class="keypad-button bg-green-400 hover:bg-green-500 text-xl font-bold text-white py-3 rounded-xl">5</button>
+                </div>
+                <div class="grid grid-cols-5 gap-3 mb-6">
+                    <button aria-label="Add 6 guests" onclick="addGuests(6)" class="keypad-button bg-green-400 hover:bg-green-500 text-xl font-bold text-white py-3 rounded-xl">6</button>
+                    <button aria-label="Add 7 guests" onclick="addGuests(7)" class="keypad-button bg-green-400 hover:bg-green-500 text-xl font-bold text-white py-3 rounded-xl">7</button>
+                    <button aria-label="Add 8 guests" onclick="addGuests(8)" class="keypad-button bg-green-400 hover:bg-green-500 text-xl font-bold text-white py-3 rounded-xl">8</button>
+                    <button aria-label="Add 9 guests" onclick="addGuests(9)" class="keypad-button bg-green-400 hover:bg-green-500 text-xl font-bold text-white py-3 rounded-xl">9</button>
+                    <button aria-label="Add 10 guests" onclick="addGuests(10)" class="keypad-button bg-green-500 hover:bg-green-600 text-xl font-bold text-white py-3 rounded-xl">10</button>
+                </div>
+            </section>
+            
+            <!-- Control Buttons -->
+            <div class="grid grid-cols-3 gap-4 mb-6">
+                <button aria-label="Reset guest counter" onclick="clearCounter()" class="counter-btn bg-purple-500 hover:bg-purple-600 text-lg font-bold text-white py-4 rounded-xl">RESET</button>
+                <button aria-label="Check in guests" onclick="submitGuests()" id="checkin-btn" class="submit-btn text-xl font-bold text-white py-4 rounded-xl chuck-font">
+                    CHECK IN
+                </button>
+                <button aria-label="Clear all totals" onclick="clearAllTotals()" class="counter-btn bg-red-500 hover:bg-red-600 text-lg font-bold text-white py-4 rounded-xl">CLEAR ALL</button>
+            </div>
+            
+            <!-- Status Message -->
+            <div id="statusMessage" class="mt-4 text-center text-sm font-semibold h-6" aria-live="polite"></div>
+
+            <!-- Summary Section -->
+            <section class="mt-6 p-4 bg-purple-100 rounded-xl" aria-label="Today's Summary">
+                <h3 class="text-center font-bold text-purple-800 mb-2">Today's Summary</h3>
+                <div class="grid grid-cols-2 gap-2 text-sm">
+                    <div class="text-purple-700">Toddlers:</div>
+                    <div id="summary-toddler" class="text-green-700 font-bold text-right">0</div>
+                    
+                    <div class="text-purple-700">Preschool:</div>
+                    <div id="summary-preschool" class="text-green-700 font-bold text-right">0</div>
+                    
+                    <div class="text-purple-700">School Age:</div>
+                    <div id="summary-school" class="text-green-700 font-bold text-right">0</div>
+                    
+                    <div class="text-purple-700">Teens:</div>
+                    <div id="summary-teen" class="text-green-700 font-bold text-right">0</div>
+                    
+                    <div class="text-purple-700">Adults:</div>
+                    <div id="summary-adult" class="text-green-700 font-bold text-right">0</div>
+                    
+                    <div class="text-purple-700 font-bold">Total:</div>
+                    <div id="summary-total" class="text-green-700 font-bold text-right">0</div>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <script src="kidscheck.js"></script>
+</body>
+</html>

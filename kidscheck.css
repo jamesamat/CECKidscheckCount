@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Nunito:wght@400;600;700&display=swap');
+
+.chuck-font {
+    font-family: 'Fredoka One', cursive;
+}
+
+.body-font {
+    font-family: 'Nunito', sans-serif;
+}
+
+.keypad-button {
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 0 #059669;
+}
+
+.keypad-button:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #059669;
+}
+
+.submit-btn {
+    background: linear-gradient(45deg, #7c3aed, #8b5cf6);
+    box-shadow: 0 6px 0 #6d28d9;
+    transition: all 0.2s ease;
+}
+
+.submit-btn:active {
+    transform: translateY(3px);
+    box-shadow: 0 3px 0 #6d28d9;
+}
+
+.submit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.display-screen {
+    background: linear-gradient(135deg, #4c1d95, #5b21b6);
+    border: 4px solid #10b981;
+}
+
+.counter-btn {
+    transition: all 0.1s ease;
+}
+
+.counter-btn:active {
+    transform: scale(0.95);
+}
+
+.pulse-animation {
+    animation: pulse 0.5s ease-in-out;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
