@@ -1,115 +1,306 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chuck E. Cheese Guest Counter</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="kidscheck.css">
+  <meta charset="UTF-8">
+  <title>Chuck E. Cheese Guest Counter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, #a78bfa, #10b981);
+      margin: 0;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.14);
+      padding: 24px;
+      margin-top: 32px;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .header h1 {
+      color: #7c3aed;
+      font-size: 2em;
+      margin-bottom: 6px;
+    }
+    .header h2 {
+      color: #333;
+      font-size: 1.1em;
+      margin-bottom: 6px;
+    }
+    .categories {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+    .categories button {
+      flex: 1 1 45%;
+      min-width: 110px;
+      padding: 10px 2px;
+      border-radius: 12px;
+      border: 2px solid #eee;
+      background: #a78bfa;
+      color: #fff;
+      font-size: 1em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: border 0.2s;
+    }
+    .categories button.selected {
+      border: 2px solid #10b981;
+      background: #7c3aed;
+    }
+    .display {
+      text-align: center;
+      margin-bottom: 16px;
+      background: #7c3aed;
+      border-radius: 12px;
+      padding: 16px 0;
+      color: #fff;
+    }
+    .keypad {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+    .keypad button {
+      flex: 1 1 28%;
+      min-width: 54px;
+      padding: 12px 0;
+      border-radius: 10px;
+      border: none;
+      background: #10b981;
+      color: #fff;
+      font-size: 1.1em;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 2px;
+    }
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+      justify-content: center;
+    }
+    .controls button {
+      flex: 1 1 45%;
+      padding: 10px 0;
+      border-radius: 10px;
+      border: none;
+      color: #fff;
+      font-weight: bold;
+      font-size: 1em;
+      cursor: pointer;
+    }
+    .reset { background: #7c3aed; }
+    .checkin { background: #10b981; }
+    .clearall { background: #ef4444; }
+    #statusMessage {
+      text-align: center;
+      min-height: 24px;
+      color: #eab308;
+      font-size: 1em;
+      margin-bottom: 10px;
+    }
+    .summary {
+      background: #ede9fe;
+      border-radius: 12px;
+      padding: 10px 16px;
+      margin-top: 8px;
+    }
+    .summary h3 {
+      text-align: center;
+      color: #7c3aed;
+      margin-bottom: 6px;
+      font-size: 1.08em;
+    }
+    .summary-table {
+      width: 100%;
+      font-size: 0.95em;
+      color: #7c3aed;
+    }
+    .summary-table td {
+      padding: 4px 0;
+    }
+    .summary-table td.value {
+      color: #10b981;
+      font-weight: bold;
+      text-align: right;
+    }
+  </style>
 </head>
-<body class="bg-gradient-to-br from-purple-500 to-green-500 min-h-screen body-font">
-    <main class="container mx-auto px-4 py-8 flex items-center justify-center min-h-screen">
-        <section class="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full border-8 border-purple-400" aria-label="Guest Counter Main">
-            <!-- Header -->
-            <header class="text-center mb-8">
-                <div class="text-6xl mb-4">🎪</div>
-                <h1 class="chuck-font text-3xl text-purple-600 mb-2">Chuck E. Cheese</h1>
-                <h2 class="text-xl font-bold text-gray-700">Guest Counter</h2>
-            </header>
-            
-            <!-- Age Category Selection -->
-            <section class="mb-6" aria-label="Age Category Selection">
-                <div class="text-center text-lg font-bold text-gray-700 mb-4">Select Age Category:</div>
-                <div class="grid grid-cols-2 gap-3 mb-3">
-                    <button aria-label="Select Toddler category" onclick="selectCategory('toddler')" id="toddler-btn" class="category-btn bg-purple-400 hover:bg-purple-500 text-white font-bold py-3 px-4 rounded-xl border-4 border-transparent">
-                        👶 Toddler<br><span class="text-sm">(1-3 years)</span>
-                    </button>
-                    <button aria-label="Select Preschool category" onclick="selectCategory('preschool')" id="preschool-btn" class="category-btn bg-green-400 hover:bg-green-500 text-white font-bold py-3 px-4 rounded-xl border-4 border-transparent">
-                        🧒 Preschool<br><span class="text-sm">(4-5 years)</span>
-                    </button>
-                </div>
-                <div class="grid grid-cols-2 gap-3 mb-3">
-                    <button aria-label="Select School Age category" onclick="selectCategory('school')" id="school-btn" class="category-btn bg-purple-500 hover:bg-purple-600 text-white font-bold py-3 px-4 rounded-xl border-4 border-transparent">
-                        🎒 School Age<br><span class="text-sm">(6-12 years)</span>
-                    </button>
-                    <button aria-label="Select Teen category" onclick="selectCategory('teen')" id="teen-btn" class="category-btn bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-xl border-4 border-transparent">
-                        🧑‍🎓 Teen<br><span class="text-sm">(13-17 years)</span>
-                    </button>
-                </div>
-                <div class="grid grid-cols-1 gap-3">
-                    <button aria-label="Select Adult category" onclick="selectCategory('adult')" id="adult-btn" class="category-btn bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-xl border-4 border-transparent">
-                        👨‍👩‍👧‍👦 Adult<br><span class="text-sm">(18+ years)</span>
-                    </button>
-                </div>
-            </section>
+<body>
+  <div class="container">
+    <div class="header">
+      <div style="font-size:2.6em;">🎪</div>
+      <h1>Chuck E. Cheese</h1>
+      <h2>Guest Counter</h2>
+    </div>
+    <div class="categories" id="categories">
+      <button onclick="selectCategory('toddler')" id="btn-toddler">👶 Toddler<br><span style="font-size:0.9em;font-weight:normal;">1-3</span></button>
+      <button onclick="selectCategory('preschool')" id="btn-preschool">🧒 Preschool<br><span style="font-size:0.9em;font-weight:normal;">4-5</span></button>
+      <button onclick="selectCategory('school')" id="btn-school">🎒 School<br><span style="font-size:0.9em;font-weight:normal;">6-12</span></button>
+      <button onclick="selectCategory('teen')" id="btn-teen">🧑‍🎓 Teen<br><span style="font-size:0.9em;font-weight:normal;">13-17</span></button>
+      <button onclick="selectCategory('adult')" id="btn-adult">👨‍👩‍👧‍👦 Adult<br><span style="font-size:0.9em;font-weight:normal;">18+</span></button>
+    </div>
+    <div class="display">
+      <div id="categoryDisplay">Select category</div>
+      <div style="font-size:2em;" id="display">0</div>
+      <div style="font-size:0.9em;">Max 999 guests</div>
+    </div>
+    <div class="keypad">
+      <button onclick="addGuests(1)">1</button>
+      <button onclick="addGuests(2)">2</button>
+      <button onclick="addGuests(3)">3</button>
+      <button onclick="addGuests(4)">4</button>
+      <button onclick="addGuests(5)">5</button>
+      <button onclick="addGuests(6)">6</button>
+      <button onclick="addGuests(7)">7</button>
+      <button onclick="addGuests(8)">8</button>
+      <button onclick="addGuests(9)">9</button>
+      <button onclick="addGuests(10)">10</button>
+    </div>
+    <div class="controls">
+      <button class="reset" onclick="clearCounter()">RESET</button>
+      <button class="checkin" onclick="submitGuests()" id="checkin-btn">CHECK IN</button>
+      <button class="clearall" onclick="clearAllTotals()">CLEAR ALL</button>
+    </div>
+    <div id="statusMessage"></div>
+    <div class="summary">
+      <h3>Today's Summary</h3>
+      <table class="summary-table">
+        <tr><td>Toddler:</td><td class="value" id="summary-toddler">0</td></tr>
+        <tr><td>Preschool:</td><td class="value" id="summary-preschool">0</td></tr>
+        <tr><td>School:</td><td class="value" id="summary-school">0</td></tr>
+        <tr><td>Teen:</td><td class="value" id="summary-teen">0</td></tr>
+        <tr><td>Adult:</td><td class="value" id="summary-adult">0</td></tr>
+        <tr><td style="font-weight:bold;">Total:</td><td class="value" id="summary-total">0</td></tr>
+      </table>
+    </div>
+  </div>
+  <script>
+    let currentCount = 0;
+    let selectedCategory = '';
+    const maxCount = 999;
+    const categoryTotals = {
+      'toddler': 0,
+      'preschool': 0,
+      'school': 0,
+      'teen': 0,
+      'adult': 0
+    };
+    const categoryNames = {
+      'toddler': 'Toddler (1-3 years)',
+      'preschool': 'Preschool (4-5 years)',
+      'school': 'School Age (6-12 years)',
+      'teen': 'Teen (13-17 years)',
+      'adult': 'Adult (18+ years)'
+    };
 
-            <!-- Display Screen -->
-            <section class="display-screen rounded-2xl p-6 mb-6 text-center" aria-live="polite">
-                <div class="text-sm text-green-300 mb-1">Selected Category:</div>
-                <div id="categoryDisplay" class="text-lg font-bold text-green-300 mb-3">Please select category</div>
-                <div class="text-sm text-green-300 mb-2">Number of Guests:</div>
-                <div id="display" class="text-5xl font-bold text-white font-mono h-16 flex items-center justify-center">
-                    0
-                </div>
-                <div class="text-xs text-purple-300 mt-2">Max 999 guests</div>
-            </section>
-            
-            <!-- Counter Keypad 1-10 -->
-            <section aria-label="Guest Add Keypad">
-                <div class="grid grid-cols-5 gap-3 mb-4">
-                    <button aria-label="Add 1 guest" onclick="addGuests(1)" class="keypad-button bg-green-400 hover:bg-green-500 text-xl font-bold text-white py-3 rounded-xl">1</button>
-                    <button aria-label="Add 2 guests" onclick="addGuests(2)" class="keypad-button bg-green-400 hover:bg-green-500 text-xl font-bold text-white py-3 rounded-xl">2</button>
-                    <button aria-label="Add 3 guests" onclick="addGuests(3)" class="keypad-button bg-green-400 hover:bg-green-500 text-xl font-bold text-white py-3 rounded-xl">3</button>
-                    <button aria-label="Add 4 guests" onclick="addGuests(4)" class="keypad-button bg-green-400 hover:bg-green-500 text-xl font-bold text-white py-3 rounded-xl">4</button>
-                    <button aria-label="Add 5 guests" onclick="addGuests(5)" class="keypad-button bg-green-400 hover:bg-green-500 text-xl font-bold text-white py-3 rounded-xl">5</button>
-                </div>
-                <div class="grid grid-cols-5 gap-3 mb-6">
-                    <button aria-label="Add 6 guests" onclick="addGuests(6)" class="keypad-button bg-green-400 hover:bg-green-500 text-xl font-bold text-white py-3 rounded-xl">6</button>
-                    <button aria-label="Add 7 guests" onclick="addGuests(7)" class="keypad-button bg-green-400 hover:bg-green-500 text-xl font-bold text-white py-3 rounded-xl">7</button>
-                    <button aria-label="Add 8 guests" onclick="addGuests(8)" class="keypad-button bg-green-400 hover:bg-green-500 text-xl font-bold text-white py-3 rounded-xl">8</button>
-                    <button aria-label="Add 9 guests" onclick="addGuests(9)" class="keypad-button bg-green-400 hover:bg-green-500 text-xl font-bold text-white py-3 rounded-xl">9</button>
-                    <button aria-label="Add 10 guests" onclick="addGuests(10)" class="keypad-button bg-green-500 hover:bg-green-600 text-xl font-bold text-white py-3 rounded-xl">10</button>
-                </div>
-            </section>
-            
-            <!-- Control Buttons -->
-            <div class="grid grid-cols-3 gap-4 mb-6">
-                <button aria-label="Reset guest counter" onclick="clearCounter()" class="counter-btn bg-purple-500 hover:bg-purple-600 text-lg font-bold text-white py-4 rounded-xl">RESET</button>
-                <button aria-label="Check in guests" onclick="submitGuests()" id="checkin-btn" class="submit-btn text-xl font-bold text-white py-4 rounded-xl chuck-font">
-                    CHECK IN
-                </button>
-                <button aria-label="Clear all totals" onclick="clearAllTotals()" class="counter-btn bg-red-500 hover:bg-red-600 text-lg font-bold text-white py-4 rounded-xl">CLEAR ALL</button>
-            </div>
-            
-            <!-- Status Message -->
-            <div id="statusMessage" class="mt-4 text-center text-sm font-semibold h-6" aria-live="polite"></div>
+    function selectCategory(cat) {
+      selectedCategory = cat;
+      document.getElementById('categoryDisplay').textContent = categoryNames[cat];
+      Array.from(document.getElementById('categories').children).forEach(btn => btn.classList.remove('selected'));
+      document.getElementById('btn-' + cat).classList.add('selected');
+      clearStatus();
+      updateCheckInButton();
+    }
 
-            <!-- Summary Section -->
-            <section class="mt-6 p-4 bg-purple-100 rounded-xl" aria-label="Today's Summary">
-                <h3 class="text-center font-bold text-purple-800 mb-2">Today's Summary</h3>
-                <div class="grid grid-cols-2 gap-2 text-sm">
-                    <div class="text-purple-700">Toddlers:</div>
-                    <div id="summary-toddler" class="text-green-700 font-bold text-right">0</div>
-                    
-                    <div class="text-purple-700">Preschool:</div>
-                    <div id="summary-preschool" class="text-green-700 font-bold text-right">0</div>
-                    
-                    <div class="text-purple-700">School Age:</div>
-                    <div id="summary-school" class="text-green-700 font-bold text-right">0</div>
-                    
-                    <div class="text-purple-700">Teens:</div>
-                    <div id="summary-teen" class="text-green-700 font-bold text-right">0</div>
-                    
-                    <div class="text-purple-700">Adults:</div>
-                    <div id="summary-adult" class="text-green-700 font-bold text-right">0</div>
-                    
-                    <div class="text-purple-700 font-bold">Total:</div>
-                    <div id="summary-total" class="text-green-700 font-bold text-right">0</div>
-                </div>
-            </section>
-        </section>
-    </main>
+    function updateDisplay() {
+      document.getElementById('display').textContent = currentCount;
+      updateCheckInButton();
+    }
 
-    <script src="kidscheck.js"></script>
+    function addGuests(n) {
+      if (!selectedCategory) { showStatus('Select a category first!', 'error'); return; }
+      if (currentCount + n > maxCount) {
+        showStatus('Maximum is ' + maxCount + ' guests!', 'error'); return;
+      }
+      currentCount += n;
+      updateDisplay();
+      clearStatus();
+    }
+
+    function clearCounter() {
+      currentCount = 0;
+      updateDisplay();
+      clearStatus();
+    }
+
+    function submitGuests() {
+      if (!selectedCategory) { showStatus('Select a category first!', 'error'); return; }
+      if (currentCount === 0) { showStatus('Add guests first!', 'error'); return; }
+      categoryTotals[selectedCategory] += currentCount;
+      updateSummary();
+      saveTotals();
+      showStatus('✅ ' + currentCount + ' ' + categoryNames[selectedCategory] + ' checked in!', 'success');
+      setTimeout(() => { clearCounter(); clearStatus(); }, 2000);
+    }
+
+    function updateSummary() {
+      for (const cat in categoryTotals) {
+        document.getElementById('summary-' + cat).textContent = categoryTotals[cat];
+      }
+      let total = Object.values(categoryTotals).reduce((a,b) => a+b, 0);
+      document.getElementById('summary-total').textContent = total;
+    }
+
+    function showStatus(msg, type) {
+      let el = document.getElementById('statusMessage');
+      el.textContent = msg;
+      el.style.color = (type === 'error') ? '#ef4444' : (type === 'success' ? '#10b981' : '#eab308');
+    }
+    function clearStatus() {
+      let el = document.getElementById('statusMessage');
+      el.textContent = '';
+      el.style.color = '#eab308';
+    }
+    function updateCheckInButton() {
+      let btn = document.getElementById('checkin-btn');
+      btn.disabled = !selectedCategory || currentCount === 0;
+      btn.style.opacity = btn.disabled ? 0.6 : 1;
+      btn.style.cursor = btn.disabled ? 'not-allowed' : 'pointer';
+    }
+    function clearAllTotals() {
+      if (confirm("Reset all today's counts?")) {
+        for (let cat in categoryTotals) categoryTotals[cat] = 0;
+        updateSummary();
+        saveTotals();
+        showStatus('All totals cleared.', 'success');
+      }
+    }
+    function saveTotals() {
+      try {
+        localStorage.setItem('categoryTotals', JSON.stringify(categoryTotals));
+      } catch(e) {}
+    }
+    function loadTotals() {
+      try {
+        let st = localStorage.getItem('categoryTotals');
+        if (st) {
+          let t = JSON.parse(st);
+          for (let cat in categoryTotals) if (typeof t[cat] === 'number') categoryTotals[cat] = t[cat];
+        }
+      } catch(e) {}
+    }
+
+    window.onload = function() {
+      loadTotals();
+      updateSummary();
+      updateDisplay();
+      updateCheckInButton();
+    }
+  </script>
 </body>
+</html>
 </html>
