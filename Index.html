@@ -246,6 +246,7 @@
   <script>
     let currentCount = 0;
     let selectedCategory = '';
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwBKAVUehbNDdgHtmXeWfTE-ibc7k9i8lrDc4JG2siRO7bj7Ask3-AKXbBHK0hgCd_p/exec";
     const maxCount = 999;
     const categoryTotals = {
       'toddler': 0,
@@ -295,12 +296,38 @@
 
     function submitGuests() {
       if (!selectedCategory) { showStatus('Select a category first!', 'error'); return; }
-      if (currentCount === 0) { showStatus('Add guests first!', 'error'); return; }
-      categoryTotals[selectedCategory] += currentCount;
-      updateSummary();
-      saveTotals();
-      showStatus('✅ ' + currentCount + ' ' + categoryNames[selectedCategory] + ' checked in!', 'success');
-      setTimeout(() => { clearCounter(); clearStatus(); }, 2000);
+    if (currentCount === 0) { showStatus('Add guests first!', 'error'); return; }
+    // POST to Google Sheets
+    fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify({category: selectedCategory, count: currentCount}),
+        headers: {"Content-Type": "application/json"}
+    }).then(response => response.text())
+        .then(() => {
+        showStatus('✅ ' + currentCount + ' ' + categoryNames[selectedCategory] + ' checked in!', 'success');
+        setTimeout(() => { clearCounter(); clearStatus(); fetchSummary(); }, 2000);
+        }).catch(() => {
+        showStatus('Error saving to Google Sheets!', 'error');
+        });
+    }
+
+    function fetchSummary() {
+    fetch(GOOGLE_SCRIPT_URL)
+        .then(response => response.json())
+        .then(summary => {
+        for (const cat in categoryTotals) {
+            categoryTotals[cat] = summary[cat] || 0;
+        }
+        updateSummary();
+        }).catch(() => {
+        showStatus('Error loading summary from Google Sheets!', 'error');
+        });
+    }
+
+    window.onload = function() {
+    fetchSummary();
+    updateDisplay();
+    updateCheckInButton();
     }
 
     function updateSummary() {
@@ -327,7 +354,7 @@
       btn.style.opacity = btn.disabled ? 0.6 : 1;
       btn.style.cursor = btn.disabled ? 'not-allowed' : 'pointer';
     }
-    function saveTotals() {
+    /*function saveTotals() {
       try {
         localStorage.setItem('categoryTotals', JSON.stringify(categoryTotals));
       } catch(e) {}
@@ -340,7 +367,7 @@
           for (let cat in categoryTotals) if (typeof t[cat] === 'number') categoryTotals[cat] = t[cat];
         }
       } catch(e) {}
-    }
+    }*/
 
     window.onload = function() {
       loadTotals();
