@@ -295,21 +295,28 @@
     }
 
     function submitGuests() {
-      if (!selectedCategory) { showStatus('Select a category first!', 'error'); return; }
-    if (currentCount === 0) { showStatus('Add guests first!', 'error'); return; }
-    // POST to Google Sheets
-    fetch(GOOGLE_SCRIPT_URL, {
-        method: "POST",
-        body: JSON.stringify({category: selectedCategory, count: currentCount}),
-        headers: {"Content-Type": "application/json"}
-    }).then(response => response.text())
-        .then(() => {
-        showStatus('✅ ' + currentCount + ' ' + categoryNames[selectedCategory] + ' checked in!', 'success');
-        setTimeout(() => { clearCounter(); clearStatus(); fetchSummary(); }, 2000);
-        }).catch(() => {
-        showStatus('Error saving to Google Sheets!', 'error');
-        });
-    }
+  if (!selectedCategory) {
+    showStatus('Select a category first!', 'error');
+    return;
+  }
+  if (currentCount === 0) {
+    showStatus('Add guests first!', 'error');
+    return;
+  }
+  const data = JSON.stringify({category: selectedCategory, count: currentCount});
+  console.log(data); // Log the data to the console
+  fetch(GOOGLE_SCRIPT_URL, {
+    method: "POST",
+    body: data,
+    headers: {"Content-Type": "application/json"}
+  }).then(response => response.text())
+      .then(() => {
+    showStatus('✅ ' + currentCount + ' ' + categoryNames[selectedCategory] + ' checked in!', 'success');
+    setTimeout(() => { clearCounter(); clearStatus(); fetchSummary(); }, 2000);
+  }).catch(() => {
+    showStatus('Error saving to Google Sheets!', 'error');
+  });
+}
 
     function fetchSummary() {
     fetch(GOOGLE_SCRIPT_URL)
