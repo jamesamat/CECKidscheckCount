@@ -303,33 +303,30 @@
         showStatus('Add guests first!', 'error');
         return;
       }
-      const form = document.createElement('form');
-      form.setAttribute('method', 'POST');
-      form.setAttribute('action', '/form-success');
-      form.setAttribute('data-netlify', 'true');
-      form.setAttribute('data-netlify-honeypot', 'bot-field');
-      form.style.display = 'none';
-      const botField = document.createElement('input');
-      botField.setAttribute('type', 'hidden');
-      botField.setAttribute('name', 'bot-field');
-      form.appendChild(botField);
-      const formNameField = document.createElement('input');
-      formNameField.setAttribute('type', 'hidden');
-      formNameField.setAttribute('name', 'form-name');
-      formNameField.setAttribute('value', 'guest-form');
-      form.appendChild(formNameField);
-      const categoryField = document.createElement('input');
-      categoryField.setAttribute('type', 'hidden');
-      categoryField.setAttribute('name', 'category');
-      categoryField.setAttribute('value', selectedCategory);
-      form.appendChild(categoryField);
-      const countField = document.createElement('input');
-      countField.setAttribute('type', 'hidden');
-      countField.setAttribute('name', 'count');
-      countField.setAttribute('value', currentCount);
-      form.appendChild(countField);
-      document.body.appendChild(form);
-      form.submit();
+      const data = JSON.stringify({ category: selectedCategory, count: currentCount });
+      console.log(data); // Log the data to the console
+      fetch('https://api.netlify.com/api/v1/forms/guest-form/submissions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer YOUR_NETLIFY_READ_WRITE_TOKEN'
+        },
+        body: data
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.json();
+      })
+      .then(() => {
+        showStatus('✅ ' + currentCount + ' ' + categoryNames[selectedCategory] + ' checked in!', 'success');
+        setTimeout(() => { clearCounter(); clearStatus(); }, 2000);
+      })
+      .catch(error => {
+        console.error('There has been a problem with your fetch operation:', error);
+        showStatus('Error saving to Netlify Forms!', 'error');
+      });
     }
 
     window.onload = function() {
@@ -341,7 +338,7 @@
       for (const cat in categoryTotals) {
         document.getElementById('summary-' + cat).textContent = categoryTotals[cat];
       }
-      let total = Object.values(categoryTotals).reduce((a,b) => a+b, 0);
+      let total = Object.values(categoryTotals).reduce((a, b) => a + b, 0);
       document.getElementById('summary-total').textContent = total;
     }
 
@@ -350,37 +347,18 @@
       el.textContent = msg;
       el.style.color = (type === 'error') ? '#ef4444' : (type === 'success' ? '#10b981' : '#eab308');
     }
+
     function clearStatus() {
       let el = document.getElementById('statusMessage');
       el.textContent = '';
       el.style.color = '#eab308';
     }
+
     function updateCheckInButton() {
       let btn = document.getElementById('checkin-btn');
       btn.disabled = !selectedCategory || currentCount === 0;
       btn.style.opacity = btn.disabled ? 0.6 : 1;
       btn.style.cursor = btn.disabled ? 'not-allowed' : 'pointer';
-    }
-    /*function saveTotals() {
-      try {
-        localStorage.setItem('categoryTotals', JSON.stringify(categoryTotals));
-      } catch(e) {}
-    }
-    function loadTotals() {
-      try {
-        let st = localStorage.getItem('categoryTotals');
-        if (st) {
-          let t = JSON.parse(st);
-          for (let cat in categoryTotals) if (typeof t[cat] === 'number') categoryTotals[cat] = t[cat];
-        }
-      } catch(e) {}
-    }*/
-
-    window.onload = function() {
-      loadTotals();
-      updateSummary();
-      updateDisplay();
-      updateCheckInButton();
     }
   </script>
 </body>
