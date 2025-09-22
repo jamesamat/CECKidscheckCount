@@ -5,6 +5,7 @@
   <title>Chuck E. Cheese Guest Counter</title>
   <meta name="viewport" content="width=768, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <style>
+    /* Keep your existing CSS styles */
     html, body {
       height: 100%;
       margin: 0;
@@ -170,7 +171,7 @@
       text-align: center;
       color: #7c3aed;
       margin-bottom: 4px;
-      font-size: 1em;
+      font-size: 1.08em;
     }
     .summary-table {
       width: 100%;
@@ -179,7 +180,7 @@
     }
     .summary-table td {
       padding: 3px 0;
-      font-size: 1em;
+      font-size: 1.08em;
     }
     .summary-table td.value {
       color: #10b981;
@@ -246,7 +247,6 @@
   <script>
     let currentCount = 0;
     let selectedCategory = '';
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxt5GGyE4yFvU4dpN9QatsusHI-6rRSYEKq_ObcdNSwkQHvOs6P-gDr8M06AlECDerV/exec";
     const maxCount = 999;
     const categoryTotals = {
       'toddler': 0,
@@ -295,57 +295,46 @@
     }
 
     function submitGuests() {
-  if (!selectedCategory) {
-    showStatus('Select a category first!', 'error');
-    return;
-  }
-  if (currentCount === 0) {
-    showStatus('Add guests first!', 'error');
-    return;
-  }
-  const data = JSON.stringify({category: selectedCategory, count: currentCount});
-  console.log(data); // Log the data to the console
-  fetch(GOOGLE_SCRIPT_URL, {
-  method: "POST",
-  body: data,
-  headers: {"Content-Type": "application/json"}
-}).then(response => {
-  if (!response.ok) {
-    throw new Error('Network response was not ok ' + response.statusText);
-  }
-  return response.text();
-}).then(() => {
-  showStatus('✅ ' + currentCount + ' ' + categoryNames[selectedCategory] + ' checked in!', 'success');
-  setTimeout(() => { clearCounter(); clearStatus(); fetchSummary(); }, 2000);
-}).catch(error => {
-  console.error('There has been a problem with your fetch operation:', error);
-  showStatus('Error saving to Google Sheets!', 'error');
-});
-}
-
-    function fetchSummary() {
-    fetch(GOOGLE_SCRIPT_URL, {
-  method: "POST",
-  body: data,
-  headers: {"Content-Type": "application/json"}
-}).then(response => {
-  if (!response.ok) {
-    throw new Error('Network response was not ok ' + response.statusText);
-  }
-  return response.text();
-}).then(() => {
-  showStatus('✅ ' + currentCount + ' ' + categoryNames[selectedCategory] + ' checked in!', 'success');
-  setTimeout(() => { clearCounter(); clearStatus(); fetchSummary(); }, 2000);
-}).catch(error => {
-  console.error('There has been a problem with your fetch operation:', error);
-  showStatus('Error saving to Google Sheets!', 'error');
-});
+      if (!selectedCategory) {
+        showStatus('Select a category first!', 'error');
+        return;
+      }
+      if (currentCount === 0) {
+        showStatus('Add guests first!', 'error');
+        return;
+      }
+      const form = document.createElement('form');
+      form.setAttribute('method', 'POST');
+      form.setAttribute('action', '/form-success');
+      form.setAttribute('data-netlify', 'true');
+      form.setAttribute('data-netlify-honeypot', 'bot-field');
+      form.style.display = 'none';
+      const botField = document.createElement('input');
+      botField.setAttribute('type', 'hidden');
+      botField.setAttribute('name', 'bot-field');
+      form.appendChild(botField);
+      const formNameField = document.createElement('input');
+      formNameField.setAttribute('type', 'hidden');
+      formNameField.setAttribute('name', 'form-name');
+      formNameField.setAttribute('value', 'guest-form');
+      form.appendChild(formNameField);
+      const categoryField = document.createElement('input');
+      categoryField.setAttribute('type', 'hidden');
+      categoryField.setAttribute('name', 'category');
+      categoryField.setAttribute('value', selectedCategory);
+      form.appendChild(categoryField);
+      const countField = document.createElement('input');
+      countField.setAttribute('type', 'hidden');
+      countField.setAttribute('name', 'count');
+      countField.setAttribute('value', currentCount);
+      form.appendChild(countField);
+      document.body.appendChild(form);
+      form.submit();
     }
 
     window.onload = function() {
-    fetchSummary();
-    updateDisplay();
-    updateCheckInButton();
+      updateDisplay();
+      updateCheckInButton();
     }
 
     function updateSummary() {
