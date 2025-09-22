@@ -1,0 +1,5 @@
+[build]
+  # Specify the directory that contains your static site files
+  publish = "dist"  # Replace "dist" with your build directory if different
+  # Specify the command Netlify should run to build your site (if applicable)
+  command = "npm run build"  # Update this command based on your build process
