@@ -298,7 +298,7 @@
       if (!selectedCategory) { showStatus('Select a category first!', 'error'); return; }
     if (currentCount === 0) { showStatus('Add guests first!', 'error'); return; }
     // POST to Google Sheets
-    fetch(/*GOOGLE_SCRIPT_URL*/ "https://script.google.com/macros/s/AKfycbxt5GGyE4yFvU4dpN9QatsusHI-6rRSYEKq_ObcdNSwkQHvOs6P-gDr8M06AlECDerV/exec", {
+    fetch(GOOGLE_SCRIPT_URL, {
         method: "POST",
         body: JSON.stringify({category: selectedCategory, count: currentCount}),
         headers: {"Content-Type": "application/json"}
@@ -312,7 +312,7 @@
     }
 
     function fetchSummary() {
-    fetch(/*GOOGLE_SCRIPT_URL*/ "https://script.google.com/macros/s/AKfycbxt5GGyE4yFvU4dpN9QatsusHI-6rRSYEKq_ObcdNSwkQHvOs6P-gDr8M06AlECDerV/exec")
+    fetch(GOOGLE_SCRIPT_URL)
         .then(response => response.json())
         .then(summary => {
         for (const cat in categoryTotals) {
