@@ -1,5 +1,0 @@
-[build]
-  # Specify that there is no build command needed
-  command = ""  # This tells Netlify not to run any build command
-  # Specify the directory that contains your static site files
-  publish = "."  # This tells Netlify to publish the current directory
